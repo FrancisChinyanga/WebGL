@@ -1,0 +1,64 @@
+	 body{
+               background-color:#ffffff;
+               color:#000fff;
+               margin: 0px 200px 0px 150px;
+           }
+           h2{
+               margin: 0 auto 0 auto;
+           }
+           #container{
+               margin: 0px 100px 0px 150px;
+               z-index:-1;
+               width: 800px;
+               height: 500px;
+               background-image:linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ),url("../images/tiles.jpg");
+               background-repeat: -x;
+                       
+           }
+           #menuKeys{
+
+           }
+           #menu{
+
+           }
+
+	.column {
+   		 float: left;
+    		width: 50%;
+		
+	}
+
+	.row:after {
+  		  content: "";
+ 	          display: table;
+   		  clear: both;
+	          align:center;
+	}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+}
+
+li {
+    float: left;
+    color: green;
+    padding:3px;
+    
+}
+
+li a {
+    display: block;
+    color: green;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111111;
+}
+ 

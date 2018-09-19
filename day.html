@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+   <head>
+       <title>Home Assignment 02</title>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+       <script src="scripts/three.min.js" type="text/javascript"></script>
+       <link rel="stylesheet" href="css/style.css">
+       <style>
+       </style>
+
+       <script type="text/javascript">
+           var renderer = null,
+                   scene = null,
+                   camera = null,
+                   cube = null,
+                   animating = false,
+                   sceneAnimating = false,
+                   floor,
+                   roof;
+
+           function onLoad() {
+               /*
+                * Get the container where we draw the Square
+                * @type @exp;document@call;getElementById
+                */
+               var container = document.getElementById("container");
+               /*
+                * Creates a THREE.js renderer and add it to the container.
+                */
+               renderer = new THREE.WebGLRenderer({antialias: true});
+               renderer.setSize(container.offsetWidth, container.offsetHeight);
+               renderer.shadowMapEnabled = true;
+               container.appendChild(renderer.domElement);
+
+
+               /*
+                * Create a THREE.js Scene
+                */
+               scene = new THREE.Scene();
+               /*
+                * Create a Perspective camera and add it to the Scene
+                */
+               camera = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 1, 200);
+               camera.position.set(0, 0, 3);
+               scene.add(camera);
+
+
+
+               /*
+                * Create a shaded texture map using an image and
+                * add it to the scene.                
+                *                  *
+                */
+               var mapURL = "images/tiles.jpg";
+               var img = THREE.ImageUtils.loadTexture(mapURL);
+               /*
+                * Create a MeshPhongMaterial for Shiny surface to show shading
+                * with the texture added above.
+                */
+               var material = new THREE.MeshPhongMaterial({specular: 0x555555, map: img});
+
+                 /*
+                * Create a Directional Light to show off the object
+                */
+                var sun = new THREE.DirectionalLight(0xffffff, 0.3);
+                sun.position.set(-0.8, -0.3, 0);
+                sun.castShadow = true;
+                sun.shadowDarkness = 0.5;               
+                sun.shadowCameraVisible = true;
+                sun.shadowCameraRight     =  1;
+                sun.shadowCameraLeft     = -0.1;
+                sun.shadowCameraTop      =  0.1;
+                sun.shadowCameraBottom   = -0.1;
+                scene.add(sun);
+               /*
+                * Create a Cube Geometry.
+                */
+               var geometry = new THREE.CubeGeometry(0.5, 0.5, 1.5);
+               var houseColor = new THREE.MeshBasicMaterial( { color: 0xfffff0 } );
+               cube = new THREE.Mesh(geometry, houseColor);
+               cube.position.set(1,-0.3,0);
+               cube.castShadow = true;
+               cube.receiveShadow = false;
+               scene.add(cube);
+
+
+               
+                var rect = new THREE.PlaneGeometry( 0.8, 0.3);
+                var rectColor = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+                var rectMesh = new THREE.Mesh( rect, rectColor );
+                rectMesh.position.set(-1,-1,0);           
+                scene.add( rectMesh );
+
+
+                var floor = new THREE.PlaneGeometry( 100, 100,1);
+                var floorColor = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+                var floorMesh = new THREE.Mesh( floor, floorColor);
+                floorMesh.position.set(0,0,0);           
+                //scene.add( floorMesh );
+
+                var roofgeometry = new THREE.CylinderGeometry(0, 0.8, 0.3, 5, false);
+                var roofmaterial = new THREE.MeshBasicMaterial({wireframe: false, color: 0x00ffff});
+                roof = new THREE.Mesh(roofgeometry, roofmaterial);
+                roof.position.set(1,0.1,0);
+                scene.add(roof);
+
+              //geometry
+                var geometry1 = new THREE.SphereGeometry(0.3,0.8,1,1,1,1);
+                var objShadow = new THREE.MeshBasicMaterial({wireframe: false, color: 0xfffff0});
+                var mesh = new THREE.Mesh(geometry1,objShadow);
+                mesh.position.set(-1.8,-0.2,0);
+                scene.add(mesh);
+
+               /*
+                * Add a mouse up handler to toggle the animation
+                00*/
+               addMouseHandler();
+               /*
+                *  Run our render loop
+                */
+               runRenderLoop();
+           }
+           function runRenderLoop() {
+               /*
+                * Render the Scene
+                */
+               renderer.render(scene, camera);
+               /*
+                * Spin the cube for next animation frame
+                */
+               if (animating) {
+                   camera.rotation.y -= 0.05;
+                   camera.rotation.z -= 0.05;
+               }
+
+                if (sceneAnimating) {
+                   cube.rotation.y -= 0.05;
+                   
+
+                   roof.rotation.y -= 0.05;
+       
+               }
+               /*
+                * Ask for another frame.
+                */
+               requestAnimationFrame(runRenderLoop);
+           }
+           function addMouseHandler() {
+               var domEle = renderer.domElement;
+               domEle.addEventListener("mouseup", onMouseUp, false);
+           }
+           function onMouseUp(event) {
+               event.preventDefault();
+               animating = !animating;
+               sceneAnimating = !sceneAnimating;
+           }
+
+          function zoomIn()
+           {
+                   camera.position.y -= 0.05;
+                   camera.position.z -= 0.05;
+           } 
+
+        function zoomOut()
+           {
+                   camera.position.y += 0.05;
+                   camera.position.z += 0.05;
+           }
+
+           function nightIn()
+           {
+            window.location.href = "../Assignment02/night.html";
+           }
+
+            function dayIn()
+           {
+            window.location.href = "../Assignment02/day.html";
+           }
+
+           function toggleRotation()
+           {
+             if(animating = !animating){
+                camera.rotation.x -= 0.02;
+                camera.rotation.y = 0;
+                camera.rotation.z -= 0.01;
+              }
+           }
+
+            function toggleAnimation() {
+
+                if(sceneAnimating = !sceneAnimating){
+                   cube.rotation.x += 0.02;
+                   cube.rotation.y = 0;
+                   cube.rotation.z += 0.01;
+
+                   roof.rotation.x += 0.02;
+                   roof.rotation.y = 0;
+                   roof.rotation.z += 0.01;
+               }
+           }
+
+          var addEvent = document.addEventListener ? function(target,type,action){
+            if(target){
+                target.addEventListener(type,action,false);
+            }
+        } : function(target,type,action){
+            if(target){
+                target.attachEvent('on' + type,action,false);
+            }
+        }
+
+addEvent(document,'keydown',function(e){
+    e = e || window.event;
+    var key = e.which || e.keyCode;
+    if(key===83){
+        toggleRotation();
+    }
+
+        if(key===82){
+        toggleAnimation();
+    }
+
+        if(key===40){
+        zoomOut();
+    }
+
+        if(key===38){
+        zoomIn();
+    }
+     if(key===68){
+        dayIn();
+    }
+       if(key===78){
+        nightIn();
+    }
+});
+       </script>
+   </head>
+   <body onLoad="onLoad();">
+    <div class ="row" style="width: 100%;">
+            <div class="column"id="menuKey" style="width:50%;align-content: left;">
+                   <h2>Press keys</h2><b> <br />
+                    <ul>
+                        <li>D-To view Day;</li>
+                        <li>N-To view Night;</li>
+                        <li>R-To start and stop rotation;</li>
+                        <li>S-To change direction of rotation;</li>
+                        <li>UpArrow- To zoom In;</li>
+                        <li>DownArrow-To zoom out<li>
+                    </ul>
+                    <br /></b>
+            </div>
+
+               <div class="column"id="menu" style="width: 50%;align-content: right;">
+                   <h2>Click Menu</h2><b> <br />
+                    <ul>
+                        <li><a href="day.html">D-To view Day</a></li>
+                        <li><a href="night.html">N-To view Night</a></li>
+                        <li><input type="submit" value="Rotation (S)" onclick="toggleRotation();"></li>
+                        <li><input type="submit" value="Animation (R)" onclick="toggleAnimation();"></li>
+                        <li><input type="submit" value="zoomIn (UpArrow)" onclick="zoomIn();"></li>
+                        <li><input type="submit" value="zoomOut" onclick="zoomOut();"><li>
+                    </ul>
+                    <br /></b>
+            </div>
+    </div>
+
+
+   <div id ="container"></div> 
+   <br />
+   <h2>WeBGL Homes Demo By Francis</h2>;
+</body>
+</html> 
+ 
